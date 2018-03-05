@@ -26,7 +26,7 @@ class AbstractLogger {
   }
 }
 
-class Logger extends AbstractLogger {
+export class Logger extends AbstractLogger {
   constructor(loggerName) {
     super();
     this.loggerName = loggerName;
@@ -56,7 +56,6 @@ class Logger extends AbstractLogger {
     let node = document.createElement('p');
     node.style.color = color || Logger.debugColor;
     node.textContent = texts.join(' ');
-    console.log(texts);
     Logger.rootDomElement.appendChild(node);
     return node;
   }

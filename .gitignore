@@ -1,2 +1,7 @@
+# IDE
 .idea/
 *.iml
+
+# folders
+dist/
+node_modules/
