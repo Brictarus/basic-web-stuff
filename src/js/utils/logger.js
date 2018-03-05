@@ -1,79 +1,41 @@
-const NOT_IMPLEMENTED = new Error('Not Implemented');
-
-class AbstractLogger {
-  debug() {
-    throw NOT_IMPLEMENTED;
-  }
-
-  info() {
-    throw NOT_IMPLEMENTED;
-  }
-
-  warn() {
-    throw NOT_IMPLEMENTED;
-  }
-
-  processTags(texts, ...tags) {
-    if (this.loggerName) {
-      tags.push(this.loggerName);
-    }
-    let tagged = tags.map(t => `[${t}]`);
-    tagged.reverse().forEach((t => texts.splice(0, 0, t)));
-  };
-
-  static getDateTime() {
-    return (new Date()).toLocaleTimeString();
-  }
-}
+import {AbstractLogger} from "./abstract-logger";
 
 export class Logger extends AbstractLogger {
-  constructor(loggerName) {
+  constructor(logLevel, loggerName, node) {
     super();
+    if (!(node instanceof HTMLElement)) {
+      throw new Error('node should be a valid HTML DOM Element');
+    }
+    this.rootDomElement = node;
     this.loggerName = loggerName;
+    if (logLevel) {
+      this.setLogLevel(logLevel);
+    }
   }
 
-  debug(...args) {
-    this.processTags(args, 'DEBUG', Logger.getDateTime());
-    Logger.newLine(args, Logger.debugColor);
+  __log(args, color) {
+    this._newLine(args, color);
   }
 
-  info(...args) {
-    this.processTags(args, 'INFO ', Logger.getDateTime());
-    Logger.newLine(args, Logger.infoColor);
-  }
-
-  warn(...args) {
-    this.processTags(args, 'WARN ', Logger.getDateTime());
-    Logger.newLine(args, Logger.warnColor);
-  }
-
-  error(...args) {
-    this.processTags(args, 'ERROR', Logger.getDateTime());
-    Logger.newLine(args, Logger.errorColor);
-  }
-
-  static newLine(texts, color) {
+  _newLine(texts, color) {
     let node = document.createElement('p');
-    node.style.color = color || Logger.debugColor;
+    if (color) {
+      node.style.color = color;
+    }
     node.textContent = texts.join(' ');
-    Logger.rootDomElement.appendChild(node);
+    this.rootDomElement.appendChild(node);
     return node;
   }
 
-  static getLogger(loggerName) {
+  static getLogger(loggerName, logLevel, node) {
     loggerName = loggerName || '';
     if (Logger._loggers.hasOwnProperty(loggerName)) {
       return Logger._loggers[loggerName];
     }
-    let logger = new Logger(loggerName);
+    let logger = new Logger(logLevel, loggerName, node);
     Logger._loggers[loggerName] = logger;
     return logger;
   }
 }
-Logger._loggers = {};
 
-Logger.debugColor = '#9c9c9c';
-Logger.infoColor = '#fff';
-Logger.warnColor = '#c67f3b';
-Logger.errorColor = '#9c0006';
-Logger.rootDomElement = document.getElementById('content');
+Logger._loggers = {};

@@ -1,6 +1,7 @@
 import {Logger} from "./utils/logger";
+import {LOG_LEVELS} from "./utils/log-level";
 
-const log = Logger.getLogger();
+const log = Logger.getLogger(null, LOG_LEVELS.DEBUG, document.getElementById('content'));
 
 window.addEventListener('load', () => {
   for (let i = 0; i < 2; i++) {
