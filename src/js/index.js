@@ -1,13 +1,9 @@
+import {App} from "./app";
+import {config} from "../conf";
 import {Logger} from "./utils/logger";
-import {LOG_LEVELS} from "./utils/log-level";
-
-const log = Logger.getLogger(null, LOG_LEVELS.DEBUG, document.getElementById('content'));
 
 window.addEventListener('load', () => {
-  for (let i = 0; i < 2; i++) {
-    log[i % 2 === 0 ? 'warn' : 'error']('test');
-  }
-  for (let i = 0; i < 6; i++) {
-    log[i % 2 === 0 ? 'debug' : 'info']('test');
-  }
+  Logger.setConfig(config.loggers);
+
+  new App(document.getElementById('content'));
 });

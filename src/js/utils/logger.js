@@ -1,4 +1,5 @@
 import {AbstractLogger} from "./abstract-logger";
+import {config} from "../../conf";
 
 export class Logger extends AbstractLogger {
   constructor(logLevel, loggerName, node) {
@@ -32,9 +33,19 @@ export class Logger extends AbstractLogger {
     if (Logger._loggers.hasOwnProperty(loggerName)) {
       return Logger._loggers[loggerName];
     }
+    if (this.config) {
+      const loggerConfig = this.config[loggerName || '*'];
+      if (loggerConfig) {
+        logLevel = loggerConfig;
+      }
+    }
     let logger = new Logger(logLevel, loggerName, node);
     Logger._loggers[loggerName] = logger;
     return logger;
+  }
+
+  static setConfig(config) {
+    this.config = config;
   }
 }
 
