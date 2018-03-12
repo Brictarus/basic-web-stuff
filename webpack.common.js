@@ -7,14 +7,13 @@ module.exports = {
   entry: './src/js/index.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: PATHS.build
+    path: path.resolve(__dirname, 'dist')
   },
   module: {
     rules: [
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: "file-loader?name=/assets/[name].[ext]"
+        loader: 'file-loader?name=[name].[ext]'
       }
     ]
   },
