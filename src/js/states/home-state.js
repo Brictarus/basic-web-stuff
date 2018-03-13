@@ -1,6 +1,7 @@
 import {AbstractState} from "./abstract-state";
 import {Logger} from "../utils/logger";
 import {LOG_LEVELS} from "../utils/log-level";
+import {config} from "../../conf";
 
 
 const KEYS = {
@@ -14,7 +15,7 @@ let log;
 export class HomeState extends AbstractState {
   constructor(app) {
     super('Home state', app);
-    log = Logger.getLogger('state', LOG_LEVELS.DEBUG, app.rootElement);
+    log = Logger.getLogger('state', LOG_LEVELS.DEBUG, config.getLogContainer());
   }
 
   enterState() {
