@@ -12,8 +12,9 @@ window.addEventListener('load', () => {
     autoscrollLogCheckbox.checked = initValue;
   };
 
-  const initDebug = function() {
+  const initDebug = function () {
     const autoscrollLogKey = 'logs-autoscroll';
+    const debugRoot = document.getElementById('debug');
     const logsContainer = document.getElementById('logs-container');
     const autoscrollLogCheckbox = document.getElementById('scroll-to-bottom-log');
     autoscrollLogCheckbox.addEventListener('change', () => {
@@ -22,10 +23,16 @@ window.addEventListener('load', () => {
     });
     initAutoscrollLogCheckbox(autoscrollLogKey, autoscrollLogCheckbox);
     new Autoscroller(logsContainer, 10, autoscrollLogCheckbox);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.which === 222) {
+        debugRoot.classList.toggle('hidden');
+      }
+    })
   };
 
   Logger.setConfig(config.loggers);
-  new App();
+  new App(document.querySelector('#main canvas'));
 
   initDebug();
 });

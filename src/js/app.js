@@ -12,7 +12,8 @@ export class App {
     log = Logger.getLogger('app', LOG_LEVELS.DEBUG, config.getLogContainer());
     log.debug('Creating app...');
 
-    this.rootElement = rootElement;
+    this.canvas = rootElement;
+    this.context = this.canvas.getContext('2d');
 
     this.initState = new InitState(this);
     this.logosState = new LogosState(this);
@@ -22,12 +23,16 @@ export class App {
   }
 
   transition(newState) {
-    log.debug('Going to a new state : ', newState.name);
     if (this.state) {
+      log.debug('Exiting state : ', this.state.name);
       this.state.exitState();
     }
     this.state = newState;
-    newState.enterState(this);
-    log.debug('New state : ', newState.name);
+    if (newState) {
+      log.debug('Entering a new state : ', newState.name);
+      newState.enterState(this);
+    } else {
+      log.info('FSM exited ');
+    }
   }
 }

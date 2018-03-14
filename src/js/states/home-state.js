@@ -3,13 +3,6 @@ import {Logger} from "../utils/logger";
 import {LOG_LEVELS} from "../utils/log-level";
 import {config} from "../../conf";
 
-
-const KEYS = {
-  '1': 97,
-  '2': 98,
-  '3': 99
-};
-
 let log;
 
 export class HomeState extends AbstractState {
@@ -20,25 +13,102 @@ export class HomeState extends AbstractState {
 
   enterState() {
     log.info('Welcome on the home screen');
-    log.info('Choose an entry :');
-    log.error('->  [1] Play !');
-    log.error('->  [2] Config');
-    log.error('->  [3] Stats');
+
+    this.options = [
+      {label: 'Play !', key: 1, keyCode: 97},
+      {label: 'Config', key: 2, keyCode: 98},
+      {label: 'Stats', key: 3, keyCode: 99}
+    ];
+    this.selectedOptionIndex = 0;
+
+    this._choiceKeyCodesMap = this.options.reduce((prev, curr) => {
+      prev[curr.keyCode] = curr;
+      return prev;
+    }, {});
 
     this.keyDownHandler = this.onKeyDown.bind(this);
-    document.addEventListener('keydown', this.keyDownHandler)
+    document.addEventListener('keydown', this.keyDownHandler);
+    this.draw();
+  }
+
+  focusNextOption() {
+    if (++this.selectedOptionIndex >= this.options.length) {
+      this.selectedOptionIndex = 0;
+    }
+    this.draw();
+  }
+
+  focusPreviousOption() {
+    if (--this.selectedOptionIndex < 0) {
+      this.selectedOptionIndex = this.options.length - 1;
+    }
+    this.draw();
+  }
+
+  draw() {
+    const ctx = this.parent.context;
+    const canvas = this.parent.canvas;
+
+    ctx.save();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ff1493';
+    ctx.textBaseline = 'top';
+    ctx.font = '56px monospace';
+    const {width: titleWidth} = ctx.measureText('HOME');
+    ctx.fillText('HOME', 400 / 2 - titleWidth / 2, 80, 400);
+    ctx.font = '12px monospace';
+    ctx.translate(0, 200);
+    this.drawOptions();
+    ctx.restore();
+  }
+
+  drawOptions() {
+    log.info('Choose an entry :');
+    const ctx = this.parent.context;
+    this.options.forEach((item, index) => {
+      const displayedText = '[' + item.key + '] ' + item.label;
+      if (index === this.selectedOptionIndex) {
+        ctx.fillStyle = '#00bf2f';
+        ctx.fillText('->', 20, index * 20, 400);
+        log.info('->', displayedText);
+      } else {
+        ctx.fillStyle = '#ff1493';
+        log.info('__', displayedText);
+      }
+      ctx.fillText(displayedText, 40, index * 20, 400);
+    });
   }
 
   onKeyDown(e) {
-    const keyCodes = Object.values(KEYS);
-    if (keyCodes.indexOf(e.which) !== -1) {
-      log.warn('You have chosen : ', Object.keys(KEYS).find((k) => KEYS[k] === e.which));
-      this.exitState();
+    const selectedOption = this._choiceKeyCodesMap[e.which];
+    if (selectedOption) {
+      this.chooseOption(selectedOption);
+    } else {
+      switch (e.which) {
+          // UP key
+        case 38:
+          this.focusPreviousOption();
+          break;
+          // DOWN key
+        case 40:
+          this.focusNextOption();
+          break;
+          // ENTER key
+        case 13:
+          this.chooseOption(this.options[this.selectedOptionIndex]);
+          break;
+        default:
+      }
     }
   }
 
   exitState() {
-    this.keyDownHandler && document.removeEventListener('keydown', this.keyDownHandler)
+    this.keyDownHandler && document.removeEventListener('keydown', this.keyDownHandler);
     this.keyDownHandler = undefined;
+  }
+
+  chooseOption(option) {
+    log.warn('You have chosen : ', option.label);
+    this.parent.transition(null);
   }
 }
