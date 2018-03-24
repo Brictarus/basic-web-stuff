@@ -5,3 +5,7 @@
 # folders
 dist/
 node_modules/
+
+# tooling
+yarn-error.log
+yarn.lock
