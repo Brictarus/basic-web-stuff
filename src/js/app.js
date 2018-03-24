@@ -1,5 +1,5 @@
-import {Logger} from "./utils/logger";
-import {LOG_LEVELS} from "./utils/log-level";
+import {Logger} from "./utils/logger/logger";
+import {LOG_LEVELS} from "./utils/logger/log-level";
 import {InitState} from "./states/init-state";
 import {LogosState} from "./states/logos-state";
 import {HomeState} from "./states/home-state";

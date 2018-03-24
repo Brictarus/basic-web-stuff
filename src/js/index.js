@@ -1,6 +1,6 @@
 import {App} from "./app";
 import {config} from "../conf";
-import {Logger} from "./utils/logger";
+import {Logger} from "./utils/logger/logger";
 
 import '../styles/main.scss';
 import {Autoscroller} from "./utils/autoscroller";

@@ -1,5 +1,5 @@
 import {AbstractLogger} from "./abstract-logger";
-import {config} from "../../conf";
+import {config} from "../../../conf";
 
 export class Logger extends AbstractLogger {
   constructor(logLevel, loggerName, node) {
