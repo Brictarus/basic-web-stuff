@@ -1,5 +1,8 @@
 const LOG_LEVEL_TAG_LENGTH = 5;
 
+/**
+ * Log level class
+ */
 export class LogLevel {
   constructor(prio, code) {
     if (typeof(prio) !== 'number') {
@@ -16,6 +19,11 @@ export class LogLevel {
     }
   }
 
+  /**
+   * Compare two LogLevel instances
+   * @param otherLevel another LogLevel instance
+   * @returns {boolean}
+   */
   isGreaterOrEquals(otherLevel) {
     return this.priority >= otherLevel.priority;
   }

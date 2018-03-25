@@ -5,6 +5,7 @@
 # folders
 dist/
 node_modules/
+jsdoc-output/
 
 # tooling
 yarn-error.log

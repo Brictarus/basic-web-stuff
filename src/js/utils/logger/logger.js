@@ -1,7 +1,15 @@
 import {AbstractLogger} from "./abstract-logger";
-import {config} from "../../../conf";
 
+/**
+ * DOM logger class
+ */
 export class Logger extends AbstractLogger {
+  /**
+   *
+   * @param {LogLevel} logLevel
+   * @param {string} loggerName
+   * @param {HTMLElement} node
+   */
   constructor(logLevel, loggerName, node) {
     super();
     if (!(node instanceof HTMLElement)) {

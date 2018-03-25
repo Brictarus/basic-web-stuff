@@ -17,15 +17,13 @@ export class Tween {
         (typeof(opts.func) === 'string' ? EASING[opts.func] : EASING.linear);
     this._checkParams(opts);
     /**
-     * @property duration
-     * @type number
-     * Duration of the tween
+     * @property duration Duration of the tween
+     * @type {number}
      */
     this.duration = opts.duration;
     /**
-     * @property func
-     * @type function (number,number,number):number
-     * Function called for interpolating value
+     * @property func Function called for interpolating value
+     * @type {function (number,number,number):number}
      */
     this.func = opts.func;
     /**
