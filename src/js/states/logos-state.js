@@ -1,6 +1,7 @@
 import {AbstractState} from "./abstract-state";
 
 import logo1 from '../../assets/trollface-meme.png';
+import {Tween} from "../utils/tween/tween";
 
 export class LogosState extends AbstractState {
   constructor(app) {
@@ -10,27 +11,47 @@ export class LogosState extends AbstractState {
   enterState() {
     this.log.info('Logo screen');
 
-    this.image = new Image();
-    this.image.src = logo1;
-    this.logoOpacity = 0;
-    this.yLogo = -200;
-    this.opacityStep = 0.01;
+    const logo = this.activeLogo = {};
+    logo.image = new Image();
+    logo.image.src = logo1;
+    logo.opacity = 0;
+    logo.x = 72;
+    logo.y = -50;
 
     this.draw();
+
+    const yLogoTween = new Tween({
+      duration: 2000,
+      targetObj: logo,
+      targetProp: 'y',
+      to: 72
+    });
+    const opacityUpTween = new Tween({
+      duration: 2500,
+      targetObj: logo,
+      targetProp: 'opacity',
+      to: 1
+    });
+    const opacityDownTween = new Tween({
+      duration: 1000,
+      targetObj: logo,
+      targetProp: 'opacity',
+      to: 0,
+      onComplete: () => this.ended = true
+    });
+    this.tweens = [
+      yLogoTween,
+      opacityUpTween.chain(opacityDownTween)
+    ];
+    this.tweens.forEach(t => t.start());
 
     this.refreshHandler = setInterval(() => this.update(), 1000 / 60);
   }
 
   update() {
-    const verticalAxisStep = 2;
-
-    this.logoOpacity += this.opacityStep;
+    this.tweens.forEach(t => t.update());
     this.draw();
-    this.yLogo += verticalAxisStep;
-    if (this.logoOpacity >= 1) {
-      this.opacityStep = -this.opacityStep;
-    }
-    else if (this.logoOpacity < 0) {
+    if (this.ended) {
       this.timeout();
     }
   }
@@ -40,10 +61,11 @@ export class LogosState extends AbstractState {
     const canvas = this.parent.canvas;
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = this.logoOpacity;
-    const xImage = 72;
-    ctx.drawImage(this.image, xImage, this.yLogo);
+    ctx.globalAlpha = this.activeLogo.opacity;
+    ctx.drawImage(this.activeLogo.image, this.activeLogo.x, this.activeLogo.y);
     ctx.restore();
+    ctx.strokeStyle = 'red';
+    ctx.strokeRect(this.activeLogo.x, this.activeLogo.y, 256, 256);
   }
 
   timeout() {
