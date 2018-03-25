@@ -13,7 +13,8 @@ window.addEventListener('load', () => {
   };
 
   const initDebug = function () {
-    const autoscrollLogKey = 'logs-autoscroll';
+    const autoscrollLogKey = 'debug-log-autoscroll';
+    const panelVisibleKey = 'debug-panel-visible';
     const debugRoot = document.getElementById('debug');
     const logsContainer = document.getElementById('logs-container');
     const autoscrollLogCheckbox = document.getElementById('scroll-to-bottom-log');
@@ -24,11 +25,25 @@ window.addEventListener('load', () => {
     initAutoscrollLogCheckbox(autoscrollLogKey, autoscrollLogCheckbox);
     new Autoscroller(logsContainer, 10, autoscrollLogCheckbox);
 
+    const showDebugPanel = JSON.parse(localStorage.getItem(panelVisibleKey)) || false;
+    if (showDebugPanel) {
+      debugRoot.classList.remove('hidden');
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.which === 222) {
         debugRoot.classList.toggle('hidden');
       }
-    })
+    });
+
+    document.querySelector('.hide-debug').addEventListener('click', () => {
+      debugRoot.classList.add('hidden');
+      localStorage.setItem(panelVisibleKey, JSON.stringify(false));
+    });
+    document.querySelector('.show-debug').addEventListener('click', () => {
+      debugRoot.classList.remove('hidden');
+      localStorage.setItem(panelVisibleKey, JSON.stringify(true));
+    });
   };
 
   Logger.setConfig(config.loggers);
