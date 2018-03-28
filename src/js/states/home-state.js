@@ -109,6 +109,6 @@ export class HomeState extends AbstractState {
 
   chooseOption(option) {
     log.warn('You have chosen : ', option.label);
-    this.parent.transition(null);
+    this.parent.transition(this.parent.mainState);
   }
 }

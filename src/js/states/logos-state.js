@@ -3,6 +3,8 @@ import {AbstractState} from "./abstract-state";
 import logo1 from '../../assets/trollface-meme.png';
 import {Tween} from "../utils/tween/tween";
 
+const LOGO_ANIMATION_DURATION = 4500;
+
 export class LogosState extends AbstractState {
   constructor(app) {
     super('Logos state', app);
@@ -21,19 +23,19 @@ export class LogosState extends AbstractState {
     this.draw();
 
     const yLogoTween = new Tween({
-      duration: 2000,
+      duration: LOGO_ANIMATION_DURATION * 0.44,
       targetObj: logo,
       targetProp: 'y',
       to: 72
     });
     const opacityUpTween = new Tween({
-      duration: 2500,
+      duration: LOGO_ANIMATION_DURATION * 0.55,
       targetObj: logo,
       targetProp: 'opacity',
       to: 1
     });
     const opacityDownTween = new Tween({
-      duration: 1000,
+      duration: LOGO_ANIMATION_DURATION * 0.22,
       targetObj: logo,
       targetProp: 'opacity',
       to: 0,
@@ -64,8 +66,6 @@ export class LogosState extends AbstractState {
     ctx.globalAlpha = this.activeLogo.opacity;
     ctx.drawImage(this.activeLogo.image, this.activeLogo.x, this.activeLogo.y);
     ctx.restore();
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(this.activeLogo.x, this.activeLogo.y, 256, 256);
   }
 
   timeout() {

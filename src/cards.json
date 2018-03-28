@@ -1,0 +1,19 @@
+[
+  {
+    "key": "strike",
+    "name": "Strike",
+    "summary": "Deal X damages",
+    "mana": 1,
+    "affixes": [
+      ["dealDamageSingle", 6]
+    ]
+  }, {
+    "key": "defense",
+    "name": "Defense",
+    "summary": "Add X shield point",
+    "mana": 1,
+    "affixes": [
+      ["defense", 5]
+    ]
+  }
+]

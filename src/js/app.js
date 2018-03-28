@@ -4,6 +4,7 @@ import {InitState} from "./states/init-state";
 import {LogosState} from "./states/logos-state";
 import {HomeState} from "./states/home-state";
 import {config} from "../conf";
+import {MainState} from "./states/main-state";
 
 let log;
 
@@ -18,6 +19,7 @@ export class App {
     this.initState = new InitState(this);
     this.logosState = new LogosState(this);
     this.homeState = new HomeState(this);
+    this.mainState = new MainState(this);
 
     this.transition(this.initState);
   }
