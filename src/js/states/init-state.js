@@ -13,7 +13,8 @@ export class InitState extends AbstractState {
     const cardCatalog = this.parent.cardCatalog = new CardCatalog();
     cardCatalog.build(cardsData);
     console.log(cardCatalog);
-    this.parent.transition(this.parent.logosState);
+    // this.parent.transition(this.parent.logosState);
+    this.parent.transition(this.parent.mainState);
   }
 
   draw() {

@@ -83,18 +83,18 @@ export class Player extends Dude {
   drawHand(ctx, canvas) {
     ctx.save();
     let x = 10, y = 150;
-    this.hand.forEach((card) => {
+    this.hand.forEach((card, idx) => {
       if (x + cardWidth > canvas.width - 10) {
         x = 10;
         y += cardHeight + 10;
       }
-      this.drawCard(card, ctx, x, y);
+      this.drawCard(card, ctx, x, y, idx);
       x += (cardWidth + 10);
     });
     ctx.restore();
   }
 
-  drawCard(card, ctx, x, y) {
+  drawCard(card, ctx, x, y, idx) {
     ctx.save();
     ctx.font = '12px monospace';
     ctx.fillStyle = '#fff';
@@ -103,6 +103,10 @@ export class Player extends Dude {
     ctx.fillStyle = '#000';
     ctx.fillText(card.baseCost.toString(), x, y);
     ctx.fillText(card.name, x + 10, y);
+
+    ctx.textAlign = 'center';
+    ctx.fillText(`[${idx}]`, x + cardWidth / 2, y + cardHeight / 2);
+
     ctx.restore();
   }
 

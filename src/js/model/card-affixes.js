@@ -20,7 +20,7 @@ export class CardAffix {
 }
 
 const dealDamageSingle = (amount) => {
-  new CardAffix(
+  return new CardAffix(
       (target) => {
         target.takeDamage(amount);
       },
@@ -30,7 +30,7 @@ const dealDamageSingle = (amount) => {
   )
 };
 const dealDamageMultiple = (amount) => {
-  new CardAffix(
+  return new CardAffix(
       (targets) => {
         targets.forEach(t => t.takeDamage(amount));
       },
