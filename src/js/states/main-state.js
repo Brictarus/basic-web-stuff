@@ -5,7 +5,7 @@ import {Enemy} from "../model/enemy";
 export const TurnStatusEnum = {
   NO_ONE: 0,
   PLAYER_TURN: 1,
-  ENNEMIES_TURN: 2
+  ENEMIES_TURN: 2
 };
 
 export class MainState extends AbstractState {
@@ -19,12 +19,13 @@ export class MainState extends AbstractState {
     this.c = this.parent.canvas;
     this.ctx = this.parent.context;
     this.catalog = this.parent.cardCatalog;
+    this.stop = false;
     this.p = new Player('Bobby', this.catalog);
     this.p.initFight();
     this.p.initTurn();
     this.turnState = TurnStatusEnum.PLAYER_TURN;
     this.enemies = [
-        new Enemy('Slime', 12, [this.catalog.getSafe('strike')])
+      new Enemy('Slime', 12, [this.catalog.getSafe('strike')])
     ];
 
     this.keyDownHandler = this.onKeyDown.bind(this);
@@ -36,10 +37,24 @@ export class MainState extends AbstractState {
   loop() {
     this.update();
     this.draw();
-    requestAnimationFrame(this.loop.bind(this));
+    if (this.stop) {
+      this.parent.transition(this.parent[this.win ? 'winState' : 'gameOverState']);
+    } else {
+      requestAnimationFrame(this.loop.bind(this));
+    }
   }
 
   update() {
+    if (this.p.dead) {
+      this.stop = true;
+      this.win = false;
+      return;
+    }
+    if (this.areAllEnemiesDead()) {
+      this.stop = true;
+      this.win = true;
+      return;
+    }
     if (this.endTurnPressed) {
       this.endTurnPressed = false;
       this.endPlayerTurn();
@@ -52,7 +67,9 @@ export class MainState extends AbstractState {
     this.ctx.fillRect(0, 0, this.c.width, this.c.height);
 
     this.p.draw(this.ctx, this.c);
-    this.enemies.forEach((e, idx) => e.draw(idx, this.ctx, this.c));
+    this.enemies.filter((e => !e.dead)).forEach((e, idx) => {
+      e.draw(idx, this.ctx, this.c)
+    });
 
     if (this.turnState === TurnStatusEnum.PLAYER_TURN) {
       this.drawEndTurnButton();
@@ -79,20 +96,39 @@ export class MainState extends AbstractState {
   }
 
   onKeyDown(e) {
-    console.log(e.which);
+    console.log(e);
     // end turn
-    if (e.which === 69 && this.turnState === TurnStatusEnum.PLAYER_TURN) {
-      this.endTurnPressed = true
+    if (this.turnState !== TurnStatusEnum.PLAYER_TURN) {
+      return;
+    }
+    if (e.code === 'KeyE') {
+      this.endTurnPressed = true;
+      return;
+    }
+    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(e.key) !== -1) {
+      const cardIndex = parseInt(e.key, 0);
+      this.p.playCard(cardIndex, this);
     }
   }
 
   endPlayerTurn() {
-    this.turnState = TurnStatusEnum.ENNEMIES_TURN;
+    this.p.endTurn();
+    this.turnState = TurnStatusEnum.ENEMIES_TURN;
     setTimeout(() => {
-      this.enemies.forEach(e => e.playTurn(this))
+      this.enemies.forEach(e => {
+        if (!e.dead) {
+          e.initTurn();
+          e.playTurn(this);
+          e.endTurn();
+        }
+      });
       this.turnState = TurnStatusEnum.PLAYER_TURN;
-    }, 1000);
+      this.p.initTurn();
+    }, 500);
+  }
 
+  areAllEnemiesDead() {
+    return this.enemies.every(e => e.dead);
   }
 
   exitState() {

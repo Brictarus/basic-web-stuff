@@ -18,13 +18,26 @@ export class Dude {
     this.block += amount;
   }
 
-  takeDamage(amount) {
-    let damageToTake = amount;
-    const tempBlock = this.block;
-    this.block = Math.max(0, this.block - amount);
-    damageToTake -= tempBlock;
+  /**
+   * block = 6
+   * amount = 5
+   * => block = 1
+   *
+   * block = 5
+   * amount = 6
+   * => block = 0
+   * => hp -= 1
+   * @param amount
+   */
+  takeDamage(damageToTake) {
+    const tempBlock = this.block - damageToTake;
+    if (tempBlock < 0) {
+      this.hp += tempBlock;
+      this.block = 0;
+    } else {
+      this.block = tempBlock;
+    }
 
-    this.hp -= damageToTake;
     if (this.hp <= 0) {
       this.dead = true;
     }
@@ -44,5 +57,8 @@ export class Dude {
 
   initTurn() {
     this.block = 0;
+  }
+
+  endTurn() {
   }
 }

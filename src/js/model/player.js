@@ -4,7 +4,8 @@ import {Dude} from "./dude";
 const cardWidth = 68;
 const cardHeight = 100;
 
-const MAX_HEALTH = 30;
+const MAX_HEALTH = 25;
+const START_HAND_SIZE = 4;
 
 export class Player extends Dude {
   constructor(name, catalog) {
@@ -27,13 +28,19 @@ export class Player extends Dude {
     this.hand = [];
     this.discardPile = [];
     shuffleArray(this.pDeck);
-    this.drawCards(4);
   }
 
   initTurn() {
     super.initTurn();
-    this.drawCards(2);
+    this.drawCards(START_HAND_SIZE);
     this.mana = 3;
+  }
+
+  endTurn() {
+    while (this.hand.length > 0) {
+      const card = this.hand.pop();
+      this.discardPile.push(card);
+    }
   }
 
   drawCards(count) {
@@ -77,6 +84,8 @@ export class Player extends Dude {
     ctx.fillText(this.hp + '/' + this.maxHp + ' HP', 0, 0);
     ctx.fillStyle = '#0037ff';
     ctx.fillText(this.mana + ' AP', 0, 15);
+    ctx.fillStyle = '#777';
+    ctx.fillText(this.block + ' DEF', 0, 30);
     ctx.restore();
   }
 
@@ -92,6 +101,30 @@ export class Player extends Dude {
       x += (cardWidth + 10);
     });
     ctx.restore();
+  }
+
+  canPlayCard(card) {
+    return this.mana >= card.baseCost;
+  }
+
+  playCard(cardIndex, parent) {
+    const card = this.hand[cardIndex];
+    if (!card) {
+      return;
+    }
+    if (!this.canPlayCard(card)) {
+      this.log.info(`Not enough AP to play card "${card}"`);
+      return;
+    }
+    this.mana -= card.baseCost;
+    this.log.info(card);
+    card.behaviours.forEach((b) => {
+      b.fn(parent.enemies[0]);
+    });
+
+    this.hand.splice(cardIndex, 1);
+
+    this.discardPile.push(card);
   }
 
   drawCard(card, ctx, x, y, idx) {

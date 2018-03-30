@@ -14,4 +14,5 @@ export function shuffleArray(a) {
       a[i] = a[j];
       a[j] = x;
     }
+    return a;
 }

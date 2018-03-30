@@ -5,6 +5,8 @@ import {LogosState} from "./states/logos-state";
 import {HomeState} from "./states/home-state";
 import {config} from "../conf";
 import {MainState} from "./states/main-state";
+import {GameOverState} from "./states/game-over-state";
+import {WinState} from "./states/win-state";
 
 let log;
 
@@ -20,6 +22,8 @@ export class App {
     this.logosState = new LogosState(this);
     this.homeState = new HomeState(this);
     this.mainState = new MainState(this);
+    this.winState = new WinState(this);
+    this.gameOverState = new GameOverState(this);
 
     this.transition(this.initState);
   }

@@ -19,6 +19,9 @@ export class Enemy extends Dude {
     ctx.fillStyle = 'red';
     ctx.fillText(this.hp + '/' + this.maxHp + ' HP', canvas.width, index * 50 + 15);
 
+    ctx.fillStyle = '#777';
+    ctx.fillText(this.block + ' DEF', canvas.width, index * 70 + 30);
+
     ctx.restore();
   }
 
@@ -34,6 +37,6 @@ export class Enemy extends Dude {
   playCard(strat, parent) {
     strat.behaviours.forEach((b) => {
       b.fn(parent.p);
-    })
+    });
   }
 }

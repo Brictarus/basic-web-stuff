@@ -14,4 +14,8 @@ export class Card {
 
     this.log.debug(`new card "${name}" created`);
   }
+
+  toString() {
+    return `(${this.baseCost}) ${this.name}`;
+  }
 }
