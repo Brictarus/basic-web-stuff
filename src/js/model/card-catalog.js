@@ -15,7 +15,7 @@ export class CardCatalog extends Map{
 
     data.forEach(d => {
       const behaviours = d.affixes.map(b => CardAffix.buildAffix(b));
-      const card = new Card(d.name, d.summary, d.mana, behaviours);
+      const card = new Card(d.name, d.summary, d.mana, behaviours, d.target);
       this.set(d.key, card);
       this._array.push(card);
     });

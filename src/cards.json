@@ -6,7 +6,8 @@
     "mana": 1,
     "affixes": [
       ["dealDamageSingle", 6]
-    ]
+    ],
+    "target": "enemy"
   }, {
     "key": "defense",
     "name": "Defense",
@@ -14,6 +15,7 @@
     "mana": 1,
     "affixes": [
       ["defense", 5]
-    ]
+    ],
+    "target": "self"
   }
 ]

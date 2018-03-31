@@ -118,8 +118,13 @@ export class Player extends Dude {
     }
     this.mana -= card.baseCost;
     this.log.info(card);
+
+    const targets = this.getTargetsForCard(card, parent.enemies);
+
     card.behaviours.forEach((b) => {
-      b.fn(parent.enemies[0]);
+      targets.forEach((target) => {
+        b.fn(target);
+      });
     });
 
     this.hand.splice(cardIndex, 1);
@@ -138,7 +143,7 @@ export class Player extends Dude {
     ctx.fillText(card.name, x + 10, y);
 
     ctx.textAlign = 'center';
-    ctx.fillText(`[${idx}]`, x + cardWidth / 2, y + cardHeight / 2);
+    ctx.fillText(`Key [${idx}]`, x + cardWidth / 2, y + cardHeight / 2);
 
     ctx.restore();
   }

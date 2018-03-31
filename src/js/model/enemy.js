@@ -35,8 +35,11 @@ export class Enemy extends Dude {
   }
 
   playCard(strat, parent) {
+    const targets = this.getTargetsForCard(strat, [parent.p]);
     strat.behaviours.forEach((b) => {
-      b.fn(parent.p);
+      targets.forEach((target) => {
+        b.fn(target);
+      });
     });
   }
 }

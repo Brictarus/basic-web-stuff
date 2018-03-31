@@ -25,7 +25,7 @@ export class MainState extends AbstractState {
     this.p.initTurn();
     this.turnState = TurnStatusEnum.PLAYER_TURN;
     this.enemies = [
-      new Enemy('Slime', 12, [this.catalog.getSafe('strike')])
+      new Enemy('Slime', 12, [this.catalog.getSafe('strike'), this.catalog.getSafe('defense')])
     ];
 
     this.keyDownHandler = this.onKeyDown.bind(this);

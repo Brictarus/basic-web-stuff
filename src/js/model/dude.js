@@ -1,6 +1,7 @@
 import {LOG_LEVELS} from "../utils/logger/log-level";
 import {config} from "../../conf";
 import {Logger} from "../utils/logger/logger";
+import {CardTarget} from "./card";
 
 export class Dude {
   constructor(name, maxHp) {
@@ -60,5 +61,19 @@ export class Dude {
   }
 
   endTurn() {
+  }
+
+  getTargetsForCard(card, enemies) {
+    if (card.target === CardTarget.SELF) {
+      return [this];
+    } else if (card.target === CardTarget.SINGLE_ENEMY) {
+      return [enemies[0]];
+    } else if (card.target === CardTarget.MULTIPLE_ENEMIES) {
+      return enemies;
+    } else {
+      const error = `Unsupported target type for now : "${card.target}"`;
+      this.log.error(error);
+      throw new Error(error);
+    }
   }
 }

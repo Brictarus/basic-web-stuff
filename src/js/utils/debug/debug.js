@@ -56,4 +56,4 @@ export function initDebug () {
     debugRoot.classList.remove('hidden');
     localStorage.setItem(panelVisibleKey, JSON.stringify(true));
   });
-};
+}
